@@ -5,7 +5,7 @@
 ## Étudiants
 -   **Erard** Julien ERAJ09050200
 -   **Berlioz** Clément
--   ***** Eloi
+-   **Seidlitz** Eloi SEIE25020100
 -   **** Clément
 
 ## Séance 1 : 
