@@ -78,14 +78,6 @@ Client : C ; Développeur : D ; Chef de projet : CP ;
 
 ### Sur papier
 
-<div style="width:80%; margin: auto;">
-    <img src="media/Capture d'écran 2024-10-31 163123.png" alt="accueil" style="width:100%;">
-</div>
-
-<div style="width:80%; margin: auto;">
-    <img src="media/Capture d'écran 2024-10-31 163123.png" alt="accueil" style="width:100%;">
-</div>
-
 ### Figma
 
 https://www.figma.com/design/a8tNdS0GlsUN2EUFGjYkza/Untitled?node-id=70-422&node-type=frame&t=quIiounqUOAMnQXf-0
