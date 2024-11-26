@@ -152,7 +152,8 @@ https://www.figma.com/design/a8tNdS0GlsUN2EUFGjYkza/Untitled?node-id=70-422&node
 
 ### À faire
 
-1. Service de messagerie entre utilisateurs
+1. Pouvoir mettre des commentaires sur les tâches
+2. Service de messagerie entre utilisateurs
 
 # Fonctionnalitées Optionnelles Non-Prioritaires
 
