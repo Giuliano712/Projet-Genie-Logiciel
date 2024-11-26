@@ -4,9 +4,9 @@
 
 ## Étudiants
 -   **Erard** Julien ERAJ09050200
--   **Berlioz** Clément
+-   **Berlioz** Clément BERC13090100
 -   **Seidlitz** Eloi SEIE25020100
--   **Hiblot-Mery** Clément
+-   **Hiblot-Mery** Clément HIBC24120200
 
 ## Séance 1 : 
 # Personas 
@@ -79,13 +79,17 @@ Client : C ; Développeur : D ; Chef de projet : CP ;
 ### Sur papier
 
 <div style="width:80%; margin: auto;">
-    <img src="media/Capture d'écran 2024-10-31 163123.png" alt="accueil" style="width:100%;">
+    <img src="media/DraftForFigma1.0.jpeg" alt="accueil" style="width:100%;">
 </div>
 
 <div style="width:80%; margin: auto;">
-    <img src="media/Capture d'écran 2024-10-31 163123.png" alt="accueil" style="width:100%;">
+    <img src="media/DraftForFigma2.0.jpeg" alt="accueil" style="width:100%;">
 </div>
 
 ### Figma
+
+<div style="width:80%; margin: auto;">
+    <img src="media/FigmaScreenshot.png" alt="accueil" style="width:100%;">
+</div>
 
 https://www.figma.com/design/a8tNdS0GlsUN2EUFGjYkza/Untitled?node-id=70-422&node-type=frame&t=quIiounqUOAMnQXf-0
