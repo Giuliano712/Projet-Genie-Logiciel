@@ -144,7 +144,8 @@ https://www.figma.com/design/a8tNdS0GlsUN2EUFGjYkza/Untitled?node-id=70-422&node
 
 ### À faire
 
-1. Adapter la visualisation actuelle de l'application à celle dans Figma *Clément Hiblot-Mery*
+1. Adapter la visualisation actuelle de l'application à celle dans Figma
+       *Clément Hiblot-Mery*
 
 # Fonctionnalitées Optionnelles Prioritaires
 
