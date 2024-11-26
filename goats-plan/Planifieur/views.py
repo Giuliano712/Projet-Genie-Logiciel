@@ -17,7 +17,8 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)  # Connecte automatiquement l'utilisateur après inscription
-            return redirect('/')
+            return redirect('/planning/')
     else:
         form = RegisterForm()
     return render(request, 'registration/register.html', {'form': form})
+

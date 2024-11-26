@@ -19,9 +19,9 @@ from django.urls import path, include
 from django.http import HttpResponseRedirect
 
 urlpatterns = [
-    path('register/', include("Planifieur.urls")),  # Enlever la redondance
-    path('planning/', include("Planifieur.urls")),  # Renommer le second chemin si nécessaire
+    path('register/', include("Planifieur.register_urls")),
+    path('planning/', include("Planifieur.planning_urls")),
     path('admin/', admin.site.urls),
-    path('', include("django.contrib.auth.urls")),  # Pour la gestion de l'authentification
-    path('', lambda request: HttpResponseRedirect('/login/')),  # Par défaut rediriger vers login
+    path('', include("django.contrib.auth.urls")),
+    path('', lambda request: HttpResponseRedirect('/login/')),
 ]
