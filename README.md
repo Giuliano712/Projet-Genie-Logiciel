@@ -93,3 +93,70 @@ Client : C ; Développeur : D ; Chef de projet : CP ;
 </div>
 
 https://www.figma.com/design/a8tNdS0GlsUN2EUFGjYkza/Untitled?node-id=70-422&node-type=frame&t=quIiounqUOAMnQXf-0
+
+# Fonctionnalités Nécessaires
+
+### Réalisées
+
+1. S'enregistrer (connexion)
+2. Se connecter en tant que Chef de Projet (connexion)
+3. Ajouter une nouvelle tâche (gestion des tâches)
+4. Possibilité de voir si une tâche est : Faite, En cours, À faire (visualisation de l'avancement)
+
+### En cours
+
+### À faire
+
+5. Se connecter en tant que Développeur (connexion)
+6. Se connecter en tant que Client (connexion)
+7. Visualiser de l'avancement en tant que Développeur (visualisation de l'avancement)
+8. Visualiser de l'avancement en tant que Client (visualisation de l'avancement)
+9. Modifier une tâche existante (gestion des tâches)
+10. Modifier l'avancement d'une tâche par le Développeur ou le Chef de Projet (gestion des tâches)
+
+# Tests
+
+
+### Réalisées
+
+1. L'utilisateur peux s'enregistrer, se connecter et accéder à la page de planning
+2. Le mot de passe ne peux pas être "password"
+3. Le mot de passe doit avoir au moins 8 caractères
+4. Le mot de passe ne peux pas être constitué uniquement de chiffres
+
+### En cours
+
+
+
+### À faire
+
+
+
+# Améliorations
+
+### Réalisées
+
+
+
+### En cours
+
+
+
+### À faire
+
+1. Adapter la visualisation actuelle de l'application à celle dans Figma
+
+# Fonctionnalitées Optionnelles Prioritaires
+
+
+### À faire
+
+1. Service de messagerie entre utilisateurs
+
+# Fonctionnalitées Optionnelles Non-Prioritaires
+
+
+### À faire
+
+1. Service de messagerie entre utilisateur et chatbot
+2. Possibilité pour le Développeur de dépoyer du code pour l'utilisation du chatbot par le client
