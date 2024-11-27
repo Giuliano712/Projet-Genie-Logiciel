@@ -21,7 +21,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('users/', include("users.urls")),
-    path('planning/', include("Planifieur.urls")),
+    path('planner/', include("planner.urls")),
     path('admin/', admin.site.urls),
     path('', include("django.contrib.auth.urls")),  # Pour la gestion de l'authentification
     path('', lambda request: HttpResponseRedirect(reverse(settings.LOGIN_URL))),  # Par défaut rediriger vers adresse presente dans settings.py

@@ -4,7 +4,7 @@ from django.views.generic import ListView
 from .models import Tache
 
 
-class Planning(LoginRequiredMixin, ListView):
+class Planner(LoginRequiredMixin, ListView):
     model = Tache
     context_object_name = 'Tache'
-    template_name = "Planifieur/index.html"
+    template_name = "planner/index.html"

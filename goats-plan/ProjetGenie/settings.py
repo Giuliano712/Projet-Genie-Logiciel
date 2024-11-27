@@ -28,7 +28,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # Redirect users to the planning after login
-LOGIN_REDIRECT_URL = 'Planifieur:planning_page'
+LOGIN_REDIRECT_URL = 'planner:planner_page'
 # Redirect users to login page if they are not authenticated
 LOGIN_URL = 'users:login'
 
@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Planifieur.apps.PlanifieurConfig',
+    'planner.apps.PlannerConfig',
     'users',
 ]
 
