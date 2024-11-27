@@ -1,17 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-</head>
-<body>
-    <h1>Register</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
-    <p>Already have an account? <a href="{% url 'users:login' %}">Login here</a></p>
-</body>
-</html>
+{% extends 'users/base.html' %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<h1>Register</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="form-group">
+        <div class="form-text">
+        <label for="id_username">Username:</label>
+        <span class="tooltip-icon">i
+            <span class="tooltip-text">
+                {{ form.username.help_text }}
+            </span>
+        </span>
+        </div>
+        {{ form.username }}
+    </div>
+    <div class="form-group">
+        <label for="id_email">Email:</label>
+        {{ form.email }}
+    </div>
+    <div class="form-group">
+        <div class="form-text">
+        <label for="id_password1">Password:</label>
+        <span class="tooltip-icon">i
+            <span class="tooltip-text">
+                {{ form.password1.help_text }}
+            </span>
+        </span>
+        </div>
+        {{ form.password1 }}
+    </div>
+    <div class="form-group">
+        <label for="id_password2">Confirm Password:</label>
+        {{ form.password2 }}
+    </div>
+    <button type="submit">Register</button>
+</form>
+<p>Already have an account? <a href="{% url 'users:login' %}">Login here</a></p>
+{% endblock %}
