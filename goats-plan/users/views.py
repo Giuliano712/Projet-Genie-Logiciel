@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 
-from Planifieur.forms import RegisterForm
+from users.forms import RegisterForm
 
 
 # Create your views here.
