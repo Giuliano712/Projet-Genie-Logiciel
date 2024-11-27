@@ -27,8 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
+# Redirect users to the planning after login
+LOGIN_REDIRECT_URL = 'Planifieur:planning_page'
+# Redirect users to login page if they are not authenticated
+LOGIN_URL = 'users:login'
+
+LOGOUT_REDIRECT_URL = 'users:login'
 
 # Application definition
 
@@ -40,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Planifieur.apps.PlanifieurConfig',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -57,8 +62,7 @@ ROOT_URLCONF = 'ProjetGenie.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        #'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
