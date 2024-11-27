@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Goat's Plan</title>
+ <link rel="stylesheet" href="{% static 'planner/base_style.css' %}">
+</head>
+<body>
+    <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
+    <h1>Goat's Plan</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Importance</th>
+                <th>Commentaire</th>
+                <th>Deadline</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for Tache in object_list %}
+            <tr>
+                <td>{{ Tache.titre }}</td>
+                <td>{{ Tache.etat }}</td>
+                <td>{{ Tache.importance }}</td>
+                <td>{{ Tache.deadline }}</td>  
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
+

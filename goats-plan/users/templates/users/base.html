@@ -1,0 +1,27 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Login{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'users/base_style.css' %}"> <!-- Link to CSS file -->
+</head>
+<body>
+
+    <div class="container">
+        <!-- Left blank area for future image -->
+        <div class="image-container"></div>
+
+        <!-- Right side form -->
+        <div class="form-container">
+        {% block content %}
+        <!-- Default content if a child template doesn't define this block -->
+        <p>Welcome to the website!</p>
+        {% endblock %}
+        </div>
+    </div>
+
+</body>
+</html>

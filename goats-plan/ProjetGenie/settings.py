@@ -27,8 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-LOGOUT_REDIRECT_URL = '/'
-LOGIN_REDIRECT_URL = '/planning/'
+# Redirect users to the planning after login
+LOGIN_REDIRECT_URL = 'planner:planner_page'
+# Redirect users to login page if they are not authenticated
+LOGIN_URL = 'users:login'
+
+LOGOUT_REDIRECT_URL = 'users:login'
 
 # Application definition
 
@@ -39,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Planifieur.apps.PlanifieurConfig',
+    'planner.apps.PlannerConfig',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -57,8 +62,7 @@ ROOT_URLCONF = 'ProjetGenie.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        #'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -122,7 +126,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "",
+    BASE_DIR / "static",
 ]
 
 # Default primary key field type

@@ -15,13 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, reverse
 from django.http import HttpResponseRedirect
+from django.conf import settings
 
 urlpatterns = [
-    path('register/', include("Planifieur.register_urls")),
-    path('planning/', include("Planifieur.planning_urls")),
+    path('users/', include("users.urls")),
+    path('planner/', include("planner.urls")),
     path('admin/', admin.site.urls),
-    path('', include("django.contrib.auth.urls")),
-    path('', lambda request: HttpResponseRedirect('/login/')),
+    path('', include("django.contrib.auth.urls")),  # Pour la gestion de l'authentification
+    path('', lambda request: HttpResponseRedirect(reverse(settings.LOGIN_URL))),  # Par défaut rediriger vers adresse presente dans settings.py
 ]
