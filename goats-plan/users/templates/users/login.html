@@ -1,9 +1,18 @@
 {% extends 'users/base.html' %}
+{% load static %}
 
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<h1>Login</h1>
+<div style="display: flex; align-items: center; margin-bottom: 20px;">
+    <!-- Logo -->
+    <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" style="height: 50px; margin-right: 15px;">
+
+    <!-- Titre -->
+    <h1 style="margin: 0;">Goat's Plan</h1>
+</div>
+
+<h2>Login</h2>
 {% if form.errors %}
     <p style="color: red;">Invalid username or password</p>
 {% endif %}

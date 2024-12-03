@@ -1,19 +1,29 @@
 {% extends 'users/base.html' %}
+{% load static %}
+
 
 {% block title %}Register{% endblock %}
 
 {% block content %}
-<h1>Register</h1>
+<div style="display: flex; align-items: center; margin-bottom: 20px;">
+    <!-- Logo -->
+    <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" style="height: 50px; margin-right: 15px;">
+
+    <!-- Titre -->
+    <h1 style="margin: 0;">Goat's Plan</h1>
+</div>
+
+<h2>Register</h2>
 <form method="post">
     {% csrf_token %}
     <div class="form-group">
         <div class="form-text">
-        <label for="id_username">Username:</label>
-        <span class="tooltip-icon">i
-            <span class="tooltip-text">
-                {{ form.username.help_text }}
+            <label for="id_username">Username:</label>
+            <span class="tooltip-icon">i
+                <span class="tooltip-text">
+                    {{ form.username.help_text }}
+                </span>
             </span>
-        </span>
         </div>
         {{ form.username }}
     </div>
@@ -23,12 +33,12 @@
     </div>
     <div class="form-group">
         <div class="form-text">
-        <label for="id_password1">Password:</label>
-        <span class="tooltip-icon">i
-            <span class="tooltip-text">
-                {{ form.password1.help_text }}
+            <label for="id_password1">Password:</label>
+            <span class="tooltip-icon">i
+                <span class="tooltip-text">
+                    {{ form.password1.help_text }}
+                </span>
             </span>
-        </span>
         </div>
         {{ form.password1 }}
     </div>
