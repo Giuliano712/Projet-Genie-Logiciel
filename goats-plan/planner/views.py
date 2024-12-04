@@ -52,8 +52,8 @@ class ProjectManagerHomeView(ProjectManagerRequiredMixin, ListView):
 
 class DeveloperHomeView(DeveloperRequiredMixin, ListView):
     model = ClientCompany
-    context_object_name = 'Client Company'
     template_name = "planner/developer.html"
+    #context_object_name = 'Client Company'
 
     def get_context_data(self, **kwargs):
         # Get the logged-in user
@@ -73,7 +73,7 @@ class DeveloperHomeView(DeveloperRequiredMixin, ListView):
 class ClientCompanyDetailView(DeveloperRequiredMixin, ClientCompanyAccessRequiredMixin, DetailView):
     model = ClientCompany
     template_name = 'planner/client_company_detail.html'
-    context_object_name = 'client_company'
+    #context_object_name = 'client_company'
 
     pk_url_kwarg = 'id'
 
@@ -84,7 +84,8 @@ class ClientCompanyDetailView(DeveloperRequiredMixin, ClientCompanyAccessRequire
 
         # Get the projects related to the client company
         client_company = self.get_object()
-        context['projects'] = client_company.project_list.filter(user_list=user)
+        context['projects'] = client_company.project_list.filter(user_list__in=[user])
+        context['client_company'] = client_company
 
         return context
 
@@ -92,7 +93,7 @@ class ClientCompanyDetailView(DeveloperRequiredMixin, ClientCompanyAccessRequire
 
 class ProjectDetailView(DetailView):
     model = Project
-    context_object_name = 'Task'
+    #context_object_name = 'Task'
     template_name = 'planner/index.html'
 
     def get_context_data(self, **kwargs):

@@ -16,7 +16,7 @@
     {% if projects %}
         <ul>
         {% for project in projects %}
-            <li><a href="{% url 'planner:project_detail' pk=project.pk %}">{{ project.name }}</a></li>
+            <li><a href="{% url 'planner:project_detail' id=client_company.id pk=project.pk %}">{{ project.name }}</a></li>
         {% endfor %}
         </ul>
     {% else %}
