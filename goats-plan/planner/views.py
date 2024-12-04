@@ -1,12 +1,18 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404, reverse
-from django.views.generic import ListView, DetailView, View, CreateView
+from django.views.generic import ListView, DetailView, View, CreateView, UpdateView
 from .models import Task, ClientCompany, Project
 from .forms import ProjectForm, CompanyForm, TaskForm
 
 
 # Mixins
+class ProjectManagerRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.role == 'project_manager'
+
+    def handle_no_permission(self):
+        return redirect('users:login')  # Redirect to login page or a different page
 
 # Doesn't work :(
 class ClientCompanyAccessRequiredMixin(UserPassesTestMixin):
@@ -31,9 +37,10 @@ class ClientCompanyAccessRequiredMixin(UserPassesTestMixin):
 # Views
 class HomeView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        return redirect(reverse('planner:mycompanies', kwargs={'userid': self.request.user.id}))
+        #return redirect(reverse('planner:mycompanies', kwargs={'userid': self.request.user.id}))
+        return redirect('planner:mycompanies', userid=request.user.id)
 
-class CompaniesView(LoginRequiredMixin, View):
+class MyCompaniesView(LoginRequiredMixin, View):
     model = ClientCompany
 
     def get(self, request, *args, **kwargs):
@@ -60,7 +67,7 @@ class CompaniesView(LoginRequiredMixin, View):
         return context
 
 
-class ProjectsView(LoginRequiredMixin, DetailView):
+class ClientCompanyDetailView(LoginRequiredMixin, DetailView):
     model = ClientCompany
     #template_name = 'planner/developer/projects.html'
 
@@ -88,7 +95,8 @@ class ProjectsView(LoginRequiredMixin, DetailView):
 
 #TODO : add page to allow project manager to create and modify projects and tasks and stuff
 
-class TasksView(LoginRequiredMixin, DetailView):
+# this class displays the tasks
+class ProjectDetailView(LoginRequiredMixin, DetailView):
     model = Project
     #template_name = 'planner/developer/tasks.html'
 
@@ -121,11 +129,11 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
     #pk_url_kwarg = 'ccid'
 
     def form_valid(self, form):
-        # automatically add project manager on project creation
-        form.instance.created_by = self.request.user
-
         project = form.save(commit=False)
 
+        # automatically add project manager on project creation
+        if self.request.user not in form.instance.user_list.all():
+            project.user_list.add(self.request.user)
         # Retrieve the ClientCompany ID from the URL kwargs
         client_company_id = self.kwargs.get('ccid')
         try:
@@ -148,5 +156,35 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
         return context
 
     def get_success_url(self, **kwargs):
+        return reverse('planner:myprojects', kwargs={'userid': self.request.user.id, 'ccid': self.kwargs.get('ccid')})
+
+
+class ProjectUpdateView(UpdateView):
+    model = Project
+    form_class = ProjectForm
+    template_name = 'planner/project_manager/create_project.html'
+
+    pk_url_kwarg = 'projectid'
+
+    def get_object(self, queryset=None):
+        """
+        Override to ensure the project exists and can only be updated by those with permission.
+        """
+        project = super().get_object(queryset)
+        return project
+
+    def form_valid(self, form):
+        """
+        Process the form when it is valid. Here you can handle any specific logic after the form submission.
+        """
+        # Call the superclass method to save the updated project
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """
+        After the project is updated, redirect to a success URL.
+        You can also modify this to redirect to the project's detail page or the project list.
+        """
+        # Redirect to the project details page (or wherever appropriate)
         return reverse('planner:myprojects', kwargs={'userid': self.request.user.id, 'ccid': self.kwargs.get('ccid')})
 
