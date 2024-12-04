@@ -16,7 +16,7 @@
     {% if client_companies %}
         <ul>
         {% for company in client_companies %}
-            <li><a href="{% url 'planner:client_company_detail' pk=company.id %}">{{ company.name }}</a></li>
+            <li><a href="{% url 'planner:client_company_detail' id=company.id %}">{{ company.name }}</a></li>
         {% endfor %}
         </ul>
     {% else %}

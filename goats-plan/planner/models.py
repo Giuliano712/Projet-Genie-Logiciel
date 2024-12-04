@@ -4,32 +4,28 @@ from users.models import CustomUser
 import uuid
 
 # Create your models here.
-class Tache(models.Model):  #TODO: make this better with links to projects and users who can see and modify. Try to figure out how to do that
+class Task(models.Model):
     IMPORTANCE_CHOICES = [
-        ('Basse', 'Basse'),
-        ('Moyenne', 'Moyenne'),
-        ('Haute', 'Haute'),
+        ('Low', 'Low'),
+        ('Medium', 'Medium'),
+        ('High', 'High'),
     ]
-    ETAT_CHOICES = [
-        ('TO DO','TO DO'),
-        ('DOING','DOING'),
-        ('DONE','DONE'),
+    STATUS_CHOICES = [
+        ('TO_DO', 'TO DO'),
+        ('DOING', 'DOING'),
+        ('DONE', 'DONE'),
     ]
-    titre = models.CharField(max_length=100)
-    etat = models.CharField(
-        max_length=100,
-        choices=ETAT_CHOICES,
-        default='TO DO')
+    title = models.CharField(max_length=100)
+    description = models.TextField()
 
-    importance = models.CharField(
-        max_length=100,
-        choices=IMPORTANCE_CHOICES,
-        default='Moyenne'
-    )
-    deadline = models.CharField(max_length=100)
+    status = models.CharField(max_length=100, choices=STATUS_CHOICES, default='TO_DO')
+    importance = models.CharField(max_length=100, choices=IMPORTANCE_CHOICES, default='Medium')
+    deadline = models.DateField()
+    project = models.ForeignKey('Project', on_delete=models.CASCADE, related_name='tasks')  # Link to a project
+    assigned_users = models.ManyToManyField(CustomUser, related_name='tasks')  # Assignable to multiple users
 
     def __str__(self):
-        return self.titre
+        return self.title
 
 
 class ClientCompany(models.Model):

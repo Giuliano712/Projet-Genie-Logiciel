@@ -20,14 +20,14 @@
             </tr>
         </thead>
         <tbody>
-        {% for Tache in object_list %}
+        {% for task in user_tasks %}
             <tr>
-                <td>{{ Tache.titre }}</td>
-                <td>{{ Tache.etat }}</td>
-                <td>{{ Tache.importance }}</td>
-                <td>{{ Tache.deadline }}</td>  
+                <td>{{ task.title }}</td>
+                <td>{{ task.status }}</td>
+                <td>{{ task.importance }}</td>
+                <td>{{ task.deadline }}</td>
             </tr>
-            {% endfor %}
+        {% endfor %}
         </tbody>
     </table>
 </body>

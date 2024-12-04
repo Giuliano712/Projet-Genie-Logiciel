@@ -11,12 +11,12 @@
 <body>
     <h1>Client Company: {{ client_company.name }}</h1>
 
-    <h2>Projects</h2>
+    <h2>Hello{{ user.username }}, Here are your Projects</h2>
 
     {% if projects %}
         <ul>
         {% for project in projects %}
-            <li>{{ project.name }}</li>
+            <li><a href="{% url 'planner:project_detail' pk=project.pk %}">{{ project.name }}</a></li>
         {% endfor %}
         </ul>
     {% else %}
