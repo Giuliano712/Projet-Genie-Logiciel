@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.views import View
 from django.contrib.auth.views import LoginView
 
@@ -28,11 +28,14 @@ class CustomLoginView(LoginView):
         # Default to the URL set in LOGIN_REDIRECT_URL if no role-based redirection is found
         redirect_url = super().get_redirect_url()
 
+        user = self.request.user
+
         # Once the user is logged in, redirect to correct url
-        if self.request.user.is_authenticated:
-            if self.request.user.role == 'developer':
-                return '/planner/developer/'
-            elif self.request.user.role == 'project_manager':
-                return '/planner/project_manager/'
+        if user.is_authenticated:
+            #if self.request.user.role == 'developer':
+            #    return '/planner/developer/'
+            #elif self.request.user.role == 'project_manager':
+            #    return '/planner/project_manager/'
+            return reverse('planner:home')
 
         return redirect_url  # Fallback to default URL

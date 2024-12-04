@@ -16,11 +16,18 @@
     {% if projects %}
         <ul>
         {% for project in projects %}
-            <li><a href="{% url 'planner:project_detail' id=client_company.id pk=project.pk %}">{{ project.name }}</a></li>
+            <li><a href="{% url 'planner:mytasks' userid=user.id ccid=client_company.id projectid=project.pk %}">{{ project.name }}</a></li>
         {% endfor %}
         </ul>
     {% else %}
         <p>No projects found for this client company.</p>
     {% endif %}
+
+    <form method="post" action="{% url 'planner:add_project' userid=user.id ccid=client_company.id %}">
+        {% csrf_token %}
+        <button type="submit" id="add-task-btn">Add Project</button>
+    </form>
+
+    <a href="{% url 'planner:mycompanies' userid=user.id %}">My Client Companies</a>
 </body>
 </html>
