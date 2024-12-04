@@ -1,0 +1,26 @@
+<!-- template.html -->
+{%  load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tile View</title>
+    <link rel="stylesheet" href="{% static 'planner/developer.css' %}">
+</head>
+<body>
+    <h1>Client Company: {{ client_company.name }}</h1>
+
+    <h2>Projects</h2>
+
+    {% if projects %}
+        <ul>
+        {% for project in projects %}
+            <li>{{ project.name }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No projects found for this client company.</p>
+    {% endif %}
+</body>
+</html>

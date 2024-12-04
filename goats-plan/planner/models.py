@@ -1,7 +1,10 @@
 from django.db import models
+from users.models import CustomUser
+
+import uuid
 
 # Create your models here.
-class Tache(models.Model):
+class Tache(models.Model):  #TODO: make this better with links to projects and users who can see and modify. Try to figure out how to do that
     IMPORTANCE_CHOICES = [
         ('Basse', 'Basse'),
         ('Moyenne', 'Moyenne'),
@@ -24,3 +27,24 @@ class Tache(models.Model):
         default='Moyenne'
     )
     deadline = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.titre
+
+
+class ClientCompany(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    project_list = models.ManyToManyField('Project', related_name='companies')
+
+    def __str__(self):
+        return self.name
+
+
+class Project(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    user_list = models.ManyToManyField(CustomUser, related_name='projects')
+
+    def __str__(self):
+        return self.name
