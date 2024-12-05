@@ -1,6 +1,6 @@
 <html>
     <body>
-        <h2>{% if object %}Edit project {{ object.name }}{% else %}Create project{% endif %} in {{ parent_company.name }}</h2>
+        <h2>{% if object %}Edit{% else %}Create{% endif %} Task in project {{ parent_project.name }}</h2>
         <form method="POST">
             {% csrf_token %}
             {{ form.as_p }}

@@ -119,6 +119,9 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         user = self.request.user
         context['user_tasks'] = user.tasks.filter(project=project)
 
+        parent_company = project.companies.first()
+        context['parent_company'] = parent_company
+
         return context
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
@@ -150,7 +153,7 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
         ccid = self.kwargs.get('ccid')
         try:
             parent_company = ClientCompany.objects.get(id=ccid)
-            context['parent_company'] = parent_company.name
+            context['parent_company'] = parent_company
         except ClientCompany.DoesNotExist:
             context['parent_company'] = None  # Handle case where company doesn't exist
         return context
@@ -167,24 +170,87 @@ class ProjectUpdateView(UpdateView):
     pk_url_kwarg = 'projectid'
 
     def get_object(self, queryset=None):
-        """
-        Override to ensure the project exists and can only be updated by those with permission.
-        """
         project = super().get_object(queryset)
         return project
 
     def form_valid(self, form):
-        """
-        Process the form when it is valid. Here you can handle any specific logic after the form submission.
-        """
         # Call the superclass method to save the updated project
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ccid = self.kwargs.get('ccid')
+        try:
+            parent_company = ClientCompany.objects.get(id=ccid)
+            context['parent_company'] = parent_company
+        except ClientCompany.DoesNotExist:
+            context['parent_company'] = None  # Handle case where company doesn't exist
+
+        return context
+
     def get_success_url(self):
-        """
-        After the project is updated, redirect to a success URL.
-        You can also modify this to redirect to the project's detail page or the project list.
-        """
         # Redirect to the project details page (or wherever appropriate)
         return reverse('planner:myprojects', kwargs={'userid': self.request.user.id, 'ccid': self.kwargs.get('ccid')})
 
+
+class TaskCreateView(ProjectManagerRequiredMixin, CreateView):
+    model = Task
+    form_class = TaskForm
+    template_name = 'planner/project_manager/create_task.html'
+
+    def form_valid(self, form):
+        task = form.save(commit=False)
+
+        projectid = self.kwargs.get('projectid')
+        try:
+            parent_project = Project.objects.get(id=projectid)
+            # automatically set parent project as project
+            task.project = parent_project
+            task.save()  # Save the project to generate the primary key
+        except ClientCompany.DoesNotExist:
+            return redirect('planner:home')
+
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        projectid = self.kwargs.get('projectid')
+        return reverse('planner:mytasks', kwargs={'userid': self.request.user.id, 'ccid': self.kwargs.get('ccid'), 'projectid': projectid})
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ccid = self.kwargs.get('ccid')
+        projectid = self.kwargs.get('projectid')
+        try:
+            parent_project = Project.objects.get(id=projectid)
+            context['parent_project'] = parent_project
+        except Project.DoesNotExist:
+            context['parent_project'] = None
+        try:
+            parent_company = ClientCompany.objects.get(id=ccid)
+            context['parent_company'] = parent_company
+        except ClientCompany.DoesNotExist:
+            context['parent_company'] = None  # Handle case where company doesn't exist
+
+        print(f"parent_company: {context['parent_company']}, parent_project: {context['parent_project']}")
+
+        return context
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        # Pass the parent project to the form as initial data
+        projectid = self.kwargs.get('projectid')
+        try:
+            parent_project = Project.objects.get(id=projectid)
+            kwargs['initial'] = {'project': parent_project}
+        except Project.DoesNotExist:
+            kwargs['initial'] = {'project': None}
+        return kwargs
+
+
+class TaskUpdateView(ProjectManagerRequiredMixin, UpdateView):
+    model = Task
+    form_class = TaskForm
+    template_name = 'planner/task_form.html'
+
+    def get_success_url(self):
+        return redirect('planner:task_detail', pk=self.object.pk)  # Redirect to the updated task detail

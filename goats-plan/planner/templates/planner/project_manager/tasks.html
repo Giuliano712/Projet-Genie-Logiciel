@@ -30,6 +30,10 @@
         {% endfor %}
         </tbody>
     </table>
+    <form method="post" action="{% url 'planner:add_task' userid=user.id ccid=parent_company.id projectid=project.pk %}">
+        {% csrf_token %}
+        <button type="submit" id="add-task-btn">Add Task</button>
+    </form>
 </body>
 </html>
 

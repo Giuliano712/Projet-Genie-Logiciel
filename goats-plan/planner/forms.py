@@ -1,5 +1,6 @@
 from django import forms
 from .models import ClientCompany, Project, Task
+from users.models import CustomUser
 
 
 class ProjectForm(forms.ModelForm):
@@ -16,4 +17,17 @@ class CompanyForm(forms.ModelForm):
 class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
-        fields = ['project', 'title', 'description', 'status', 'importance', 'deadline', 'assigned_users']
+        fields = ['title', 'description', 'status', 'importance', 'deadline', 'assigned_users']
+
+    # only add users that work on the task's project
+    def __init__(self, *args, **kwargs):
+        # Get the project from kwargs passed to the form instance
+        project = kwargs.get('initial', {}).get('project', None)
+
+        super().__init__(*args, **kwargs)
+
+        # Filter the user choices to only include users related to the project
+        if project:
+            self.fields['assigned_users'].queryset = project.user_list.all()
+        else:
+            self.fields['assigned_users'].queryset = CustomUser.objects.none()  # No users if no project is provided
