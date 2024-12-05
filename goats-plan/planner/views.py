@@ -3,7 +3,7 @@ from django.http import HttpResponseForbidden
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.views.generic import ListView, DetailView, View, CreateView, UpdateView
 from .models import Task, ClientCompany, Project
-from .forms import ProjectForm, CompanyForm, TaskForm
+from .forms import ProjectForm, CompanyForm, TaskForm, TaskUpdateStatusForm
 
 
 # Mixins
@@ -125,7 +125,32 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
         parent_company = project.companies.first()
         context['parent_company'] = parent_company
 
+        context['status_form'] = TaskUpdateStatusForm()
+        context['STATUS_CHOICES'] = Task.STATUS_CHOICES
+
         return context
+
+    def post(self, request, userid, ccid, projectid, *args, **kwargs):
+        task_id = request.POST.get('task_id')
+        task = Task.objects.get(id=task_id)
+
+        if 'status' in request.POST:
+            form = TaskUpdateStatusForm(request.POST, instance=task)
+            if form.is_valid():
+                form.save()
+            else:
+                # Handle form errors here
+                pass
+
+        if 'title' in request.POST:
+            task.title = request.POST['title']
+            task.save()
+
+        if 'importance' in request.POST:
+            task.importance = request.POST['importance']
+            task.save()
+
+        return redirect('planner:mytasks', userid=userid, ccid=ccid, projectid=projectid)
 
 class ProjectCreateView(LoginRequiredMixin, CreateView):
     model = Project
@@ -306,3 +331,30 @@ class TaskDeleteView(LoginRequiredMixin, View):
             return redirect('planner:mytasks', userid=userid, ccid=ccid, projectid=projectid)
 
         return redirect('planner:mytasks', userid=userid, ccid=ccid, projectid=projectid)
+
+class TaskUpdateStatusView(LoginRequiredMixin, UpdateView):
+    model = Task
+    form_class = TaskUpdateStatusForm
+    template_name = 'planner/developer/update_task.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ccid = self.kwargs.get('ccid')
+        projectid = self.kwargs.get('projectid')
+        try:
+            parent_project = Project.objects.get(id=projectid)
+            context['parent_project'] = parent_project
+        except Project.DoesNotExist:
+            context['parent_project'] = None
+        try:
+            parent_company = ClientCompany.objects.get(id=ccid)
+            context['parent_company'] = parent_company
+        except ClientCompany.DoesNotExist:
+            context['parent_company'] = None  # Handle case where company doesn't exist
+
+        return context
+
+    def get_success_url(self):
+        return reverse('planner:mytasks', kwargs={'userid': self.request.user.id, 'ccid': self.kwargs.get('ccid'), 'projectid': self.kwargs.get('projectid')})
+
+

@@ -23,3 +23,60 @@ h1 {
     text-align: center;
     color: #333;
 }
+
+
+
+
+/* Styling for the status dropdown */
+.status-dropdown {
+    display: none;
+    width: 100px;
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Styling for the clickable status text */
+.task-status {
+    cursor: pointer;
+    color: #007bff;
+    text-decoration: underline;
+}
+
+/* Optional: Style the dropdown when it's displayed */
+.status-dropdown:focus {
+    border-color: #007bff;
+}
+
+/* Styling for the edit icon */
+.edit-icon {
+    cursor: pointer;
+    color: #007bff;
+    margin-left: 10px;
+}
+
+/* Styling for the editable text */
+.editable-field {
+    display: inline-block;
+}
+
+/* Styling for the input fields */
+.edit-input, .status-dropdown {
+    display: none;
+    width: 100px;
+    padding: 5px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Show the input or dropdown when it’s in editable mode */
+.edit-input:focus, .status-dropdown:focus {
+    border-color: #007bff;
+}
+
+/* Optional: Highlight editable text */
+.editable-field:hover {
+    background-color: #f0f0f0;
+}

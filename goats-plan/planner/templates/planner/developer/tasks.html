@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Goat's Plan</title>
- <link rel="stylesheet" href="{% static 'planner/base_style.css' %}">
+    <link rel="stylesheet" href="{% static 'planner/base_style.css' %}">
 </head>
 <body>
     <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
@@ -25,7 +25,19 @@
         {% for task in user_tasks %}
             <tr>
                 <td>{{ task.title }}</td>
-                <td>{{ task.status }}</td>
+                <td>
+                    <form method="post" action="{% url 'planner:mytasks' userid=user.id ccid=parent_company.id projectid=project.pk %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="task_id" value="{{ task.pk }}">
+
+                        <!-- Dropdown menu for status change (always visible) -->
+                        <select name="status" id="status-dropdown-{{ task.pk }}" class="status-dropdown" onchange="this.form.submit()">
+                            {% for status, status_label in task.STATUS_CHOICES %}
+                                <option value="{{ status }}" {% if task.status == status %}selected{% endif %}>{{ status_label }}</option>
+                            {% endfor %}
+                        </select>
+                    </form>
+                </td>
                 <td>{{ task.importance }}</td>
                 <td>{{ task.description }}</td>
                 <td>{{ task.deadline }}</td>
@@ -44,4 +56,3 @@
     </table>
 </body>
 </html>
-

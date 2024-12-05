@@ -31,3 +31,8 @@ class TaskForm(forms.ModelForm):
             self.fields['assigned_users'].queryset = project.user_list.all()
         else:
             self.fields['assigned_users'].queryset = CustomUser.objects.none()  # No users if no project is provided
+
+class TaskUpdateStatusForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['status']
