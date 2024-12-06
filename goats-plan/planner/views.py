@@ -1,9 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.http import HttpResponseForbidden
+from django.http import HttpResponseForbidden, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404, reverse
 from django.views.generic import ListView, DetailView, View, CreateView, UpdateView
 from .models import Task, ClientCompany, Project
 from .forms import ProjectForm, CompanyForm, TaskForm, TaskUpdateStatusForm
+from users.models import CustomUser
 
 
 # Mixins
@@ -159,6 +160,19 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         project = form.save(commit=False)
         project.save()
+
+        managers = self.request.POST.get('managers', '').split(',')
+        developers = self.request.POST.get('developers', '').split(',')
+        managers = ["projectmanager"]
+        developers = ["developer"]
+        # Add users to the project
+        for username in managers + developers:
+            try:
+                user = CustomUser.objects.get(username=username)
+                project.user_list.add(user)
+            except CustomUser.DoesNotExist:
+                return redirect('planner:home')
+
         # automatically add project manager on project creation
         if self.request.user not in form.instance.user_list.all():
             project.user_list.add(self.request.user)
@@ -173,6 +187,9 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
 
         return super().form_valid(form)
 
+    #def form_invalid(self, form):
+    #    return JsonResponse({"error": "Form is invalid"}, status=400)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         ccid = self.kwargs.get('ccid')
@@ -181,6 +198,10 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
             context['parent_company'] = parent_company
         except ClientCompany.DoesNotExist:
             context['parent_company'] = None  # Handle case where company doesn't exist
+
+        context['managers'] = CustomUser.objects.filter(role='project_manager')
+        context['developers'] = CustomUser.objects.filter(role='developer')
+
         return context
 
     def get_success_url(self, **kwargs):

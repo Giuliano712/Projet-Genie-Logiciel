@@ -8,6 +8,10 @@ class ProjectForm(forms.ModelForm):
         model = Project
         fields = ['name', 'user_list']
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not self.instance.pk:  # Check if it's a new project
+            self.fields['user_list'].queryset = self.fields['user_list'].queryset.none()
 
 class CompanyForm(forms.ModelForm):
     class Meta:

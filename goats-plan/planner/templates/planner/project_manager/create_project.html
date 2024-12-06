@@ -1,10 +1,121 @@
-<html>
-    <body>
-        <h2>{% if object %}Edit project {{ object.name }}{% else %}Create project{% endif %} in {{ parent_company.name }}</h2>
-        <form method="POST">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create/Edit Project</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Your custom styles here */
+    </style>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">
+            {% if object %}
+                Edit Project: {{ object.name }}
+            {% else %}
+                Create Project
+            {% endif %}
+        </h1>
+        <h3 class="text-center mb-5">For {{ parent_company.name }}</h3>
+        <form method="POST" id="project-form">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Save</button>
+            <div class="mb-4">
+                <label for="id_name" class="form-label">Project Name</label>
+                {{ form.name }}
+            </div>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="custom-card">
+                        <div class="mb-3">Project Managers</div>
+                        <div class="d-flex align-items-center gap-3" id="project-managers"></div>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Add Project Manager
+                            </button>
+                            <ul class="dropdown-menu" id="manager-select">
+                                {% for manager in managers %}
+                                <li><a class="dropdown-item" href="#" onclick="addUser('project_manager', '{{ manager.username }}')">{{ manager.username }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="custom-card">
+                        <div class="mb-3">Developers</div>
+                        <div class="d-flex align-items-center gap-3" id="developers"></div>
+                        <div class="dropdown">
+                            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Add Developer
+                            </button>
+                            <ul class="dropdown-menu" id="developer-select">
+                                {% for developer in developers %}
+                                <li><a class="dropdown-item" href="#" onclick="addUser('developer', '{{ developer.username }}')">{{ developer.username }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <input type="hidden" name="managers" id="managers-data">
+            <input type="hidden" name="developers" id="developers-data">
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
         </form>
-    </body>
+    </div>
+
+    <script>
+        let managers = [];
+        let developers = [];
+
+        function addUser(role, username) {
+            if (role === 'project_manager') {
+                if (!managers.includes(username)) {
+                    managers.push(username);
+                    updateUserList(role, managers, 'project-managers');
+                }
+            } else if (role === 'developer') {
+                if (!developers.includes(username)) {
+                    developers.push(username);
+                    updateUserList(role, developers, 'developers');
+                }
+            }
+        }
+
+        function removeUser(role, username) {
+            if (role === 'project_manager') {
+                managers = managers.filter(user => user !== username);
+                updateUserList(role, managers, 'project-managers');
+            } else if (role === 'developer') {
+                developers = developers.filter(user => user !== username);
+                updateUserList(role, developers, 'developers');
+            }
+        }
+
+        function updateUserList(role, userList, containerId) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            userList.forEach(username => {
+                const div = document.createElement('div');
+                div.classList.add('profile-circle');
+                div.innerHTML = `
+                    <span>${username}</span>
+                    <button type="button" class="remove-btn" onclick="removeUser('${role}', '${username}')">&times;</button>
+                `;
+                container.appendChild(div);
+            });
+            document.getElementById(`${role === 'project_manager' ? 'managers' : 'developers'}-data`).value = userList.join(',');
+        }
+
+        document.getElementById('project-form').addEventListener('submit', function(event) {
+            document.getElementById('managers-data').value = managers.join(',');
+            document.getElementById('developers-data').value = developers.join(',');
+        });
+    </script>
+</body>
 </html>
