@@ -190,7 +190,7 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
         return reverse('planner:myprojects', kwargs={'userid': self.request.user.id, 'ccid': self.kwargs.get('ccid')})
 
 
-class ProjectUpdateView(UpdateView):
+class ProjectUpdateView(ProjectManagerRequiredMixin, UpdateView):
     model = Project
     form_class = ProjectForm
     template_name = 'planner/project_manager/create_project.html'
@@ -221,7 +221,7 @@ class ProjectUpdateView(UpdateView):
         return reverse('planner:myprojects', kwargs={'userid': self.request.user.id, 'ccid': self.kwargs.get('ccid')})
 
 
-class ProjectDeleteView(LoginRequiredMixin, View):
+class ProjectDeleteView(ProjectManagerRequiredMixin, View):
     def post(self, request, userid, ccid, projectid, *args, **kwargs):
         try:
             project = Project.objects.get(id=projectid)
@@ -322,7 +322,7 @@ class TaskUpdateView(ProjectManagerRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse('planner:mytasks', kwargs={'userid': self.request.user.id, 'ccid': self.kwargs.get('ccid'), 'projectid': self.kwargs.get('projectid')})
 
-class TaskDeleteView(LoginRequiredMixin, View):
+class TaskDeleteView(ProjectManagerRequiredMixin, View):
     def post(self, request, userid, ccid, projectid, pk, *args, **kwargs):
         try:
             task = Task.objects.get(id=pk)
