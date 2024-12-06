@@ -99,3 +99,21 @@ h1 {
     color: #000;
     text-decoration: none;
 }
+
+.project-group {
+    border: 2px solid #4a69ff;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #f4f4f9;
+}
+
+.project-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+

@@ -375,7 +375,7 @@ class AllTasksView(LoginRequiredMixin, DetailView):
 
         # Get the projects related to the client company
         client_company = self.get_object()
-        projects = client_company.project_list.all()
+        projects = client_company.project_list.filter(user_list__in=[user])
 
         project_tasks = {}
         for project in projects:

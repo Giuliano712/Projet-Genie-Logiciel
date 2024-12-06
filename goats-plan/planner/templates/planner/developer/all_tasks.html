@@ -1,34 +1,125 @@
-<!-- template.html -->
-{%  load static %}
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tile View</title>
-    <link rel="stylesheet" href="{% static 'planner/developer.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Goat's Plan</title>
+    <link rel="stylesheet" href="{% static 'planner/tasks_style.css' %}">
 </head>
 <body>
-    <h1>Client Company: {{ client_company.name }}</h1>
+    <div class="header">
+        <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
+        <h1>Goat's Plan</h1>
+    </div>
 
-    <h2>Hello{{ user.username }}, Here are your Projects</h2>
+    <div class="board">
+        <!-- To Do Column -->
+        <div class="column">
+            <h2>To Do</h2>
+            {% if project_tasks %}
+                {% for project, tasks in project_tasks.items %}
+                    <div class="project-group">
+                        <h3 class="project-title">{{ project.name }}</h3>
+                        {% for task in tasks %}
+                            {% if task.status == "TO_DO" %}
+                                <div class="task" onclick="openModal('{{ task.title }}', '{{ task.importance }}', '{{ task.deadline }}', '{{ task.description }}', '{{ task.status }}')">
+                                    <span><strong>Titre :</strong> {{ task.title }}</span>
+                                    <span><strong>Importance :</strong> {{ task.importance }}</span>
+                                    <span><strong>Deadline :</strong> {{ task.deadline }}</span>
+                                    <span><strong>Participants :</strong>
+                                        {% for user in task.assigned_users.all %}
+                                            {{ user.username }}{% if not forloop.last %}, {% endif %}
+                                        {% empty %}
+                                            Aucun participant
+                                        {% endfor %}
+                                    </span>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
 
-    {% if project_tasks %}
-    {% for project, tasks in project_tasks.items %}
-        <h2>{{ project.name }}</h2>
-        <ul>
-            {% for task in tasks %}
-                <li>
-                    <strong>{{ task.title }}</strong>: {{ task.status }} ({{ task.importance }})
-                    <br>{{ task.description }}
-                    <br>Deadline: {{ task.deadline }}
-                </li>
+        <!-- Doing Column -->
+        <div class="column">
+            <h2>Doing</h2>
+            {% for task in user_tasks %}
+                {% if task.status == "DOING" %}
+                    <div class="task" onclick="openModal('{{ task.title }}', '{{ task.importance }}', '{{ task.deadline }}', '{{ task.description }}', '{{ task.status }}')">
+                        <span><strong>Titre :</strong> {{ task.title }}</span>
+                        <span><strong>Importance :</strong> {{ task.importance }}</span>
+                        <span><strong>Deadline :</strong> {{ task.deadline }}</span>
+                        <span><strong>Participants :</strong>
+                            {% for user in task.assigned_users.all %}
+                                {{ user.username }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                Aucun participant
+                            {% endfor %}
+                        </span>
+                    </div>
+                {% endif %}
             {% endfor %}
-        </ul>
-    {% empty %}
-        <p>No projects or tasks found.</p>
-    {% endfor %}
-    {% endif %}
-    <a href="{% url 'planner:mycompanies' userid=user.id %}">My Client Companies</a>
+        </div>
+
+        <!-- Done Column -->
+        <div class="column">
+            <h2>Done</h2>
+            {% for task in user_tasks %}
+                {% if task.status == "DONE" %}
+                    <div class="task" onclick="openModal('{{ task.title }}', '{{ task.importance }}', '{{ task.deadline }}', '{{ task.description }}', '{{ task.status }}')">
+                        <span><strong>Titre :</strong> {{ task.title }}</span>
+                        <span><strong>Importance :</strong> {{ task.importance }}</span>
+                        <span><strong>Deadline :</strong> {{ task.deadline }}</span>
+                        <span><strong>Participants :</strong>
+                            {% for user in task.assigned_users.all %}
+                                {{ user.username }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                Aucun participant
+                            {% endfor %}
+                        </span>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Détails de la tâche</h2>
+            <p><strong>Titre :</strong> <span id="modalTitre"></span></p>
+            <p><strong>Importance :</strong> <span id="modalImportance"></span></p>
+            <p><strong>Deadline :</strong> <span id="modalDeadline"></span></p>
+            <p><strong>Commentaire :</strong> <span id="modalCommentaire"></span></p>
+            <p><strong>État :</strong> <span id="modalEtat"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Modal script (inchangé)
+        const modal = document.getElementById("taskModal");
+        const closeBtn = document.querySelector(".close");
+
+        function openModal(title, importance, deadline, description, status) {
+            document.getElementById("modalTitre").textContent = title;
+            document.getElementById("modalImportance").textContent = importance;
+            document.getElementById("modalDeadline").textContent = deadline;
+            document.getElementById("modalCommentaire").textContent = description;
+            document.getElementById("modalEtat").textContent = status;
+            modal.style.display = "block";
+        }
+
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        };
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+    </script>
 </body>
 </html>
