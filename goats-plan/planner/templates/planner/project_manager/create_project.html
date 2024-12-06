@@ -1,0 +1,10 @@
+<html>
+    <body>
+        <h2>{% if object %}Edit project {{ object.name }}{% else %}Create project{% endif %} in {{ parent_company.name }}</h2>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save</button>
+        </form>
+    </body>
+</html>
