@@ -45,7 +45,12 @@
             font-size: 20px;
             margin-bottom: 15px;
         }
+
+
+
+/* Style pour le rectangle de la tâche */
         .task {
+            cursor: pointer; /* Change le curseur au survol */
             background-color: #eaeaea;
             border-radius: 5px;
             padding: 10px;
@@ -53,10 +58,56 @@
             display: flex;
             flex-direction: column;
             gap: 5px;
+            transition: background-color 0.3s ease; /* Animation pour l'effet hover */
+        }
+
+
+
+        .task:hover {
+            background-color: #dcdcdc; /* Change la couleur au survol */
         }
         .task span {
             font-size: 14px;
         }
+
+
+
+        .modal {
+    display: none; /* Caché par défaut */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Modal content */
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    border-radius: 8px;
+}
+
+/* Close button */
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+}
     </style>
 </head>
 <body>
@@ -71,11 +122,17 @@
             <h2>To Do</h2>
             {% for task in object_list %}
                 {% if task.etat == "TO DO" %}
-                    <div class="task">
-                        <span><strong>Titre :</strong> {{ task.titre }}</span>
-                        <span><strong>Importance :</strong> {{ task.importance }}</span>
-                        <span><strong>Deadline :</strong> {{ task.deadline }}</span>
-                        <span><strong>Commentaire :</strong> {{ task.commentaire }}</span>
+                    <div class="task" onclick="openModal('{{ task.titre }}', '{{ task.importance }}', '{{ task.deadline }}', '{{ task.commentaire }}', '{{ task.etat }}')">
+                            <span><strong>Titre :</strong> {{ task.titre }}</span>
+                            <span><strong>Importance :</strong> {{ task.importance }}</span>
+                            <span><strong>Deadline :</strong> {{ task.deadline }}</span>
+                            <span><strong>Participants :</strong>
+                                {% for user in task.utilisateurs.all %}
+                                    {{ user.username }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    Aucun participant
+                                {% endfor %}
+                            </span>
                     </div>
                 {% endif %}
             {% endfor %}
@@ -86,12 +143,18 @@
             <h2>Doing</h2>
             {% for task in object_list %}
                 {% if task.etat == "DOING" %}
-                    <div class="task">
-                        <span><strong>Titre :</strong> {{ task.titre }}</span>
-                        <span><strong>Importance :</strong> {{ task.importance }}</span>
-                        <span><strong>Deadline :</strong> {{ task.deadline }}</span>
-                        <span><strong>Commentaire :</strong> {{ task.commentaire }}</span>
-                    </div>
+                        <div class="task" onclick="openModal('{{ task.titre }}', '{{ task.importance }}', '{{ task.deadline }}', '{{ task.commentaire }}', '{{ task.etat }}')">
+                            <span><strong>Titre :</strong> {{ task.titre }}</span>
+                            <span><strong>Importance :</strong> {{ task.importance }}</span>
+                            <span><strong>Deadline :</strong> {{ task.deadline }}</span>
+                            <span><strong>Participants :</strong>
+                                {% for user in task.utilisateurs.all %}
+                                    {{ user.username }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    Aucun participant
+                                {% endfor %}
+                            </span>
+                        </div>
                 {% endif %}
             {% endfor %}
         </div>
@@ -101,15 +164,62 @@
             <h2>Done</h2>
             {% for task in object_list %}
                 {% if task.etat == "DONE" %}
-                    <div class="task">
-                        <span><strong>Titre :</strong> {{ task.titre }}</span>
-                        <span><strong>Importance :</strong> {{ task.importance }}</span>
-                        <span><strong>Deadline :</strong> {{ task.deadline }}</span>
-                        <span><strong>Commentaire :</strong> {{ task.commentaire }}</span>
-                    </div>
+                    <div class="task" onclick="openModal('{{ task.titre }}', '{{ task.importance }}', '{{ task.deadline }}', '{{ task.commentaire }}', '{{ task.etat }}')">
+                            <span><strong>Titre :</strong> {{ task.titre }}</span>
+                            <span><strong>Importance :</strong> {{ task.importance }}</span>
+                            <span><strong>Deadline :</strong> {{ task.deadline }}</span>
+                            <span><strong>Participants :</strong>
+                                {% for user in task.utilisateurs.all %}
+                                    {{ user.username }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    Aucun participant
+                                {% endfor %}
+                            </span>                    </div>
                 {% endif %}
             {% endfor %}
         </div>
     </div>
+
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Détails de la tâche</h2>
+            <p><strong>Titre :</strong> <span id="modalTitre"></span></p>
+            <p><strong>Importance :</strong> <span id="modalImportance"></span></p>
+            <p><strong>Deadline :</strong> <span id="modalDeadline"></span></p>
+            <p><strong>Commentaire :</strong> <span id="modalCommentaire"></span></p>
+            <p><strong>État :</strong> <span id="modalEtat"></span></p>
+        </div>
+    </div>
+
+
+    <script>
+    // Récupérer les éléments de la modale
+    const modal = document.getElementById("taskModal");
+    const closeBtn = document.querySelector(".close");
+
+    // Fonction pour afficher la modale avec les détails
+    function openModal(titre, importance, deadline, commentaire, etat) {
+        document.getElementById("modalTitre").textContent = titre;
+        document.getElementById("modalImportance").textContent = importance;
+        document.getElementById("modalDeadline").textContent = deadline;
+        document.getElementById("modalCommentaire").textContent = commentaire;
+        document.getElementById("modalEtat").textContent = etat;
+        modal.style.display = "block";
+    }
+
+    // Fermer la modale
+    closeBtn.onclick = function() {
+        modal.style.display = "none";
+    };
+
+    // Fermer la modale si on clique en dehors
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    };
+    </script>
+
 </body>
 </html>

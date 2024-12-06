@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Détails de la tâche</title>
+</head>
+<body>
+    <h1>{{ task.titre }}</h1>
+    <p><strong>Importance :</strong> {{ task.importance }}</p>
+    <p><strong>Deadline :</strong> {{ task.deadline }}</p>
+    <p><strong>Commentaire :</strong> {{ task.commentaire }}</p>
+    <p><strong>État :</strong> {{ task.etat }}</p>
+    <a href="{% url 'planner:planner_page' %}">Retour au tableau</a>
+</body>
+</html>
