@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tile View</title>
+    <link rel="stylesheet" href="{% static 'planner/developer.css' %}">
+    <link rel="stylesheet" href="{% static 'planner/compagny.css' %}">
+
+
+</head>
+<body>
+    <header>
+        <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo">
+        <h1>Goat's Plan</h1>
+    </header>
+
+    <main>
+        <h2>Your Client Companies</h2>
+        {% if client_companies %}
+            <div class="tile-container">
+                {% for company in client_companies %}
+                    <a href="{% url 'planner:myprojects' userid=user.id ccid=company.id %}" class="tile">
+                        {{ company.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>You are not assigned to any client companies.</p>
+        {% endif %}
+    </main>
+
+    <footer>
+        <a href="{% url 'planner:mycompanies' userid=user.id %}">My Client Companies</a>
+        <a href="{% url 'users:logout' %}">Log Out</a>
+    </footer>
+
+
+
+</body>
+</html>

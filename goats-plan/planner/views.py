@@ -46,10 +46,7 @@ class MyCompaniesView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         context = self.get_context_data()
         # redirect user based on role
-        if request.user.role == 'developer':
-            return render(request, 'planner/developer/companies.html', context)
-        elif request.user.role == 'project_manager':
-            return render(request, 'planner/project_manager/companies.html', context)
+        return render(request, 'planner/companies.html', context)
 
         return redirect('users:login')
 
