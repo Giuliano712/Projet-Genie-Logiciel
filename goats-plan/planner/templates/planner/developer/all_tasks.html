@@ -13,18 +13,22 @@
 
     <h2>Hello{{ user.username }}, Here are your Projects</h2>
 
-    <a href="{% url 'planner:all_tasks_and_projects' userid=user.id ccid=client_company.id %}">SHOW ALL TASKS</a>
-    
-    {% if projects %}
+    {% if project_tasks %}
+    {% for project, tasks in project_tasks.items %}
+        <h2>{{ project.name }}</h2>
         <ul>
-        {% for project in projects %}
-            <li><a href="{% url 'planner:mytasks' userid=user.id ccid=client_company.id projectid=project.pk %}">{{ project.name }}</a></li>
-        {% endfor %}
+            {% for task in tasks %}
+                <li>
+                    <strong>{{ task.title }}</strong>: {{ task.status }} ({{ task.importance }})
+                    <br>{{ task.description }}
+                    <br>Deadline: {{ task.deadline }}
+                </li>
+            {% endfor %}
         </ul>
-    {% else %}
-        <p>No projects found for this client company.</p>
+    {% empty %}
+        <p>No projects or tasks found.</p>
+    {% endfor %}
     {% endif %}
-
     <a href="{% url 'planner:mycompanies' userid=user.id %}">My Client Companies</a>
 </body>
 </html>

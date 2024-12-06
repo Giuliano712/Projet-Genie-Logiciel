@@ -105,7 +105,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
     def get_template_names(self):
         user = self.request.user
         if user.role == 'developer':
-            return ['planner/developer/tasks.html']
+            return ['planner/index.html']
         elif user.role == 'project_manager':
             return ['planner/project_manager/tasks.html']
 
@@ -357,4 +357,42 @@ class TaskUpdateStatusView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse('planner:mytasks', kwargs={'userid': self.request.user.id, 'ccid': self.kwargs.get('ccid'), 'projectid': self.kwargs.get('projectid')})
 
+class AllTasksView(LoginRequiredMixin, DetailView):
+    model = ClientCompany
+    #template_name = 'planner/developer/projects.html'
+
+    pk_url_kwarg = 'ccid'
+
+    def get_template_names(self):
+        if self.request.user.role == 'developer':
+            return ['planner/developer/all_tasks.html']
+        elif self.request.user.role == 'project_manager':
+            return ['planner/project_manager/projects.html']
+
+        return ['planner/not_found.html']
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+
+        # Get the projects related to the client company
+        client_company = self.get_object()
+        projects = client_company.project_list.all()
+
+        project_tasks = {}
+        for project in projects:
+            if user.role == 'project_manager':
+                # All tasks for the project
+                tasks = project.tasks.all()
+            else:
+                # Only tasks assigned to the developer
+                tasks = project.tasks.filter(assigned_users=user)
+            project_tasks[project] = tasks
+
+        context['project_tasks'] = project_tasks
+
+        context['client_company'] = client_company
+
+        return context
 

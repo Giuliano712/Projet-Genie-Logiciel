@@ -32,7 +32,7 @@
 
                         <!-- Dropdown menu for status change (always visible) -->
                         <select name="status" id="status-dropdown-{{ task.pk }}" class="status-dropdown" onchange="this.form.submit()">
-                            {% for status, status_label in task.STATUS_CHOICES %}
+                            {% for status, status_label in STATUS_CHOICES %}
                                 <option value="{{ status }}" {% if task.status == status %}selected{% endif %}>{{ status_label }}</option>
                             {% endfor %}
                         </select>

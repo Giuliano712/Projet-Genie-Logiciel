@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Goat's Plan</title>
+ <link rel="stylesheet" href="{% static 'planner/base_style.css' %}">
+</head>
+<body>
+    <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
+    <h1>Goat's Plan</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Status</th>
+                <th>Importance</th>
+                <th>Detail</th>
+                <th>Deadline</th>
+                <th>For who ?</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for task in user_tasks %}
+            <tr>
+                <form method="POST" action="{% url 'planner:mytasks' userid=user.id ccid=parent_company.id projectid=project.pk %}" id="task-form-{{ task.pk }}">
+                    {% csrf_token %}
+                    <input type="hidden" name="task_id" value="{{ task.pk }}">
+
+                    <td>
+                        <span class="editable-field" id="title-{{ task.pk }}">
+                            {{ task.title }}
+                            {% if user.role == 'project_manager' %}
+                                <span class="edit-icon" onclick="makeEditable('title', {{ task.pk }})">✏️</span>
+                            {% endif %}
+                        </span>
+                        <input type="text" class="edit-input" id="title-input-{{ task.pk }}" value="{{ task.title }}" style="display:none;" onchange="this.form.submit()">
+                    </td>
+                    <td>
+                        <span class="editable-field" id="status-{{ task.pk }}">
+                            {{ task.get_status_display }}
+                            {% if user.role == 'project_manager' %}
+                                <span class="edit-icon" onclick="makeEditable('status', {{ task.pk }})">✏️</span>
+                            {% endif %}
+                        </span>
+                        <select name="status" id="status-dropdown-{{ task.pk }}" class="status-dropdown" style="display:none;" onchange="this.form.submit()">
+                            {% for status, status_label in task.STATUS_CHOICES %}
+                                <option value="{{ status }}" {% if task.status == status %}selected{% endif %}>{{ status_label }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <span class="editable-field" id="importance-{{ task.pk }}">
+                            {{ task.importance }}
+                            {% if user.role == 'project_manager' %}
+                                <span class="edit-icon" onclick="makeEditable('importance', {{ task.pk }})">✏️</span>
+                            {% endif %}
+                        </span>
+                        <input type="text" class="edit-input" id="importance-input-{{ task.pk }}" value="{{ task.importance }}" style="display:none;" onchange="this.form.submit()">
+                    </td>
+                    <td>{{ task.description }}</td>
+                    <td>{{ task.deadline }}</td>
+                    <td>
+                        {% if task.assigned_users.all %}
+                            {% for user in task.assigned_users.all %}
+                                {{ user.username }}{% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            No users assigned
+                        {% endif %}
+                    </td>
+                </form>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <form method="post" action="{% url 'planner:add_task' userid=user.id ccid=parent_company.id projectid=project.pk %}">
+        {% csrf_token %}
+        <button type="submit" id="add-task-btn">Add Task</button>
+    </form>
+</body>
+</html>
+<script>
+// Function to toggle the edit mode for a field
+function makeEditable(field, taskId) {
+    var fieldText = document.getElementById(field + '-' + taskId);
+    var fieldInput = document.getElementById(field + '-input-' + taskId);
+    var fieldSelect = document.getElementById(field + '-dropdown-' + taskId);
+
+    // Toggle visibility for text and input/dropdown
+    if (fieldInput) {
+        fieldText.style.display = 'none';
+        fieldInput.style.display = 'block';
+    } else if (fieldSelect) {
+        fieldText.style.display = 'none';
+        fieldSelect.style.display = 'block';
+    }
+}
+
+// Function to save the changes and submit the form (you can modify this for the whole row or specific fields)
+function saveChanges(taskId) {
+    var form = document.getElementById('task-form-' + taskId);
+    form.submit();  // Submit the form to save changes
+}
+</script>
+
