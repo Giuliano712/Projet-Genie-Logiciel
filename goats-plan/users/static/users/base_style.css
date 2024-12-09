@@ -72,3 +72,54 @@ button {
 button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
+
+.form-group {
+    position: relative;
+    margin-bottom: 1.5em;
+}
+
+.form-text {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    position: relative;
+}
+
+.tooltip-icon {
+    display: inline-block;
+    margin-left: 5px;
+    cursor: pointer;
+    font-size: 10px;
+    font-weight: bold;
+    color: #007BFF;
+    border-radius: 50%;
+    border: 1px solid #007BFF;
+    width: 15px;
+    height: 15px;
+    text-align: center;
+    line-height: 17px;
+    position: relative;
+}
+
+.tooltip-text {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 130%;
+    background-color: #333;
+    color: #fff;
+    padding: 8px;
+    border-radius: 4px;
+    width: 400px;
+    text-align: left;
+    font-size: 12px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip-icon:hover .tooltip-text {
+    display: block;
+    opacity: 1;
+}
