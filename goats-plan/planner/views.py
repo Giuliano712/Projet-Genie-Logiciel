@@ -5,6 +5,10 @@ from django.views.generic import ListView, DetailView, View, CreateView, UpdateV
 from .models import Task, ClientCompany, Project
 from .forms import ProjectForm, CompanyForm, TaskForm, TaskUpdateStatusForm
 
+from .models import Task
+
+
+
 
 # Mixins
 class ProjectManagerRequiredMixin(UserPassesTestMixin):
@@ -364,7 +368,7 @@ class AllTasksView(LoginRequiredMixin, DetailView):
         if self.request.user.role == 'developer':
             return ['planner/developer/all_tasks.html']
         elif self.request.user.role == 'project_manager':
-            return ['planner/project_manager/projects.html']
+            return ['planner/project_manager/all_tasks.html']
 
         return ['planner/not_found.html']
 
@@ -392,4 +396,20 @@ class AllTasksView(LoginRequiredMixin, DetailView):
         context['client_company'] = client_company
 
         return context
+
+
+    def post(self, request, userid, ccid, projectid, *args, **kwargs):
+        task_id = request.POST.get('task_id')
+        task = Task.objects.get(id=task_id)
+
+        if 'status' in request.POST:
+            form = TaskUpdateStatusForm(request.POST, instance=task)
+            if form.is_valid():
+                form.save()
+            else:
+                # Handle form errors here
+                pass
+
+        return redirect('planner:all_tasks_and_projects', userid=userid, ccid=ccid, projectid=projectid)
+
 

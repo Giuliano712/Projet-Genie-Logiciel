@@ -34,7 +34,7 @@
             Aucun participant
         {% endfor %}
     </span>
-        <select name="status" class="status-selector" data-task-id="{{ task.id }}" onchange="this.form.submit()">
+    <select class="status-selector" data-task-id="{{ task.id }}">
         <option value="TO_DO" {% if task.status == "TO_DO" %}selected{% endif %}>To Do</option>
         <option value="DOING" {% if task.status == "DOING" %}selected{% endif %}>Doing</option>
         <option value="DONE" {% if task.status == "DONE" %}selected{% endif %}>Done</option>
@@ -67,7 +67,7 @@
             Aucun participant
         {% endfor %}
     </span>
-    <select name="status" class="status-selector" data-task-id="{{ task.id }}" onchange="this.form.submit()">
+    <select class="status-selector" data-task-id="{{ task.id }}">
         <option value="TO_DO" {% if task.status == "TO_DO" %}selected{% endif %}>To Do</option>
         <option value="DOING" {% if task.status == "DOING" %}selected{% endif %}>Doing</option>
         <option value="DONE" {% if task.status == "DONE" %}selected{% endif %}>Done</option>
@@ -100,7 +100,7 @@
             Aucun participant
         {% endfor %}
     </span>
-    <select name="status" class="status-selector" data-task-id="{{ task.id }}" onchange="this.form.submit()">
+    <select class="status-selector" data-task-id="{{ task.id }}">
         <option value="TO_DO" {% if task.status == "TO_DO" %}selected{% endif %}>To Do</option>
         <option value="DOING" {% if task.status == "DOING" %}selected{% endif %}>Doing</option>
         <option value="DONE" {% if task.status == "DONE" %}selected{% endif %}>Done</option>
@@ -179,6 +179,37 @@
     document.addEventListener("DOMContentLoaded", applyProjectColors);
 
 
+    document.addEventListener("DOMContentLoaded", () => {
+        const statusSelectors = document.querySelectorAll(".status-selector");
+
+        statusSelectors.forEach(selector => {
+            selector.addEventListener("change", event => {
+                const taskId = event.target.getAttribute("data-task-id");
+                const newStatus = event.target.value;
+
+                // Envoyer une requête AJAX pour mettre à jour le statut
+                fetch(`/update-task-status/${taskId}/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}" // Ajoutez un jeton CSRF
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Déplacer la tâche dans la bonne colonne
+                        const taskElement = event.target.closest(".task");
+                        const targetColumn = document.querySelector(`.column h2:contains('${newStatus}')`).parentNode;
+                        targetColumn.appendChild(taskElement);
+                    } else {
+                        alert("Erreur lors de la mise à jour du statut.");
+                    }
+                })
+                .catch(error => console.error("Erreur réseau :", error));
+            });
+        });
+    });
     </script>
 </body>
 </html>
