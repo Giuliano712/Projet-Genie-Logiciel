@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="{% static 'planner/forms_style.css' %}">
 </head>
 <body>
+    <header>
+        <a href="{% url "planner:home" %}">
+            <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo">
+        </a>
+        <h1>Goat's Plan</h1>
+    </header>
+
     <h2>{% if object %}Edit project {{ object.name }}{% else %}Create project{% endif %} in {{ parent_company.name }}</h2>
     <div class="form-container">
         <form method="post">
@@ -16,9 +23,13 @@
                 <input type="text" name="name" id="id_name" maxlength="100" required class="form-input">
             </div>
             <div class="form-group">
+                <label for="id_user_list">User List :</label>
                 {{ form.user_list }}
             </div>
-            <button type="submit" class="submit-button">Submit</button>
+            <div class="form-actions">
+                <button type="submit" class="submit-button">Submit</button>
+                <a href="{% url 'planner:myprojects' userid=user.id ccid=parent_company.id %}" class="cancel-button">Cancel</a>
+            </div>
         </form>
     </div>
 </body>
