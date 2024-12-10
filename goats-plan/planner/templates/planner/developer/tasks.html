@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="{% static 'planner/base_style.css' %}">
 </head>
 <body>
-    <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
+    <a href="{% url "planner:home" %}">
+        <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
+    </a>
     <h1>Goat's Plan</h1>
     <table>
         <thead>

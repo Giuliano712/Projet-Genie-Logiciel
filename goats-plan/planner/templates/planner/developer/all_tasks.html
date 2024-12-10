@@ -9,7 +9,10 @@
 </head>
 <body>
     <div class="header">
-        <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
+        <!-- Make image clickable and link to home page -->
+        <a href="{% url "planner:home" %}">
+            <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
+        </a>
         <h1>Goat's Plan</h1>
     </div>
 
