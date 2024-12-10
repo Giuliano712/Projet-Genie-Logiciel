@@ -1,0 +1,21 @@
+/* Copied from main page */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+.header {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+}
+.logo {
+    margin-right: 15px;
+}
+.app-name {
+    font-size: 24px;
+    margin: 0;
+}

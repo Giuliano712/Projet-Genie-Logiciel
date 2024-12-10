@@ -7,13 +7,16 @@
     <title>Goat's Plan</title>
     <link rel="stylesheet" href="{% static 'planner/base_style.css' %}">
     <link rel="stylesheet" href="{% static 'planner/taskspm.css' %}">
+    <link rel="stylesheet" href="{% static 'planner/header_style.css' %}">
 
 </head>
 <body>
-    <a href="{% url "planner:home" %}">
-        <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
-    </a>
-    <h1>Goat's Plan</h1>
+    <div class="header">
+        <a href="{% url "planner:home" %}">
+            <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
+        </a>
+        <h1 class="app-name">Goat's Plan</h1>
+    </div>
 
     <div class="task-container">
         <!-- To Do Column -->
