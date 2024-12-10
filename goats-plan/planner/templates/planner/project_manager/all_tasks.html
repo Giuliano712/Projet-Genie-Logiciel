@@ -25,7 +25,7 @@
                         <h3 class="project-title">{{ project.name }}</h3>
                         {% for task in tasks %}
                             {% if task.status == "TO_DO" %}
-                                <div class="task">
+                                <div class="task" onclick="openModal('{{ task.title }}', '{{ task.importance }}', '{{ task.deadline }}', '{{ task.description }}', '{{ task.status }}')">
     <span><strong>Titre :</strong> {{ task.title }}</span>
     <span><strong>Importance :</strong> {{ task.importance }}</span>
     <span><strong>Deadline :</strong> {{ task.deadline }}</span>
@@ -36,11 +36,6 @@
             Aucun participant
         {% endfor %}
     </span>
-    <select class="status-selector" data-task-id="{{ task.id }}">
-        <option value="TO_DO" {% if task.status == "TO_DO" %}selected{% endif %}>To Do</option>
-        <option value="DOING" {% if task.status == "DOING" %}selected{% endif %}>Doing</option>
-        <option value="DONE" {% if task.status == "DONE" %}selected{% endif %}>Done</option>
-    </select>
 </div>
                             {% endif %}
                         {% endfor %}
@@ -58,7 +53,7 @@
                         <h3 class="project-title">{{ project.name }}</h3>
                         {% for task in tasks %}
                             {% if task.status == "DOING" %}
-                                <div class="task">
+                                <div class="task" onclick="openModal('{{ task.title }}', '{{ task.importance }}', '{{ task.deadline }}', '{{ task.description }}', '{{ task.status }}')">
     <span><strong>Titre :</strong> {{ task.title }}</span>
     <span><strong>Importance :</strong> {{ task.importance }}</span>
     <span><strong>Deadline :</strong> {{ task.deadline }}</span>
@@ -69,11 +64,6 @@
             Aucun participant
         {% endfor %}
     </span>
-    <select class="status-selector" data-task-id="{{ task.id }}">
-        <option value="TO_DO" {% if task.status == "TO_DO" %}selected{% endif %}>To Do</option>
-        <option value="DOING" {% if task.status == "DOING" %}selected{% endif %}>Doing</option>
-        <option value="DONE" {% if task.status == "DONE" %}selected{% endif %}>Done</option>
-    </select>
 </div>
                             {% endif %}
                         {% endfor %}
@@ -91,7 +81,7 @@
                         <h3 class="project-title">{{ project.name }}</h3>
                         {% for task in tasks %}
                             {% if task.status == "DONE" %}
-                                <div class="task">
+                                <div class="task" onclick="openModal('{{ task.title }}', '{{ task.importance }}', '{{ task.deadline }}', '{{ task.description }}', '{{ task.status }}')">
     <span><strong>Titre :</strong> {{ task.title }}</span>
     <span><strong>Importance :</strong> {{ task.importance }}</span>
     <span><strong>Deadline :</strong> {{ task.deadline }}</span>
@@ -102,11 +92,6 @@
             Aucun participant
         {% endfor %}
     </span>
-    <select class="status-selector" data-task-id="{{ task.id }}">
-        <option value="TO_DO" {% if task.status == "TO_DO" %}selected{% endif %}>To Do</option>
-        <option value="DOING" {% if task.status == "DOING" %}selected{% endif %}>Doing</option>
-        <option value="DONE" {% if task.status == "DONE" %}selected{% endif %}>Done</option>
-    </select>
 </div>
                             {% endif %}
                         {% endfor %}
