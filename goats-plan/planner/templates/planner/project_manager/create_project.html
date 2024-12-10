@@ -1,10 +1,25 @@
-<html>
-    <body>
-        <h2>{% if object %}Edit project {{ object.name }}{% else %}Create project{% endif %} in {{ parent_company.name }}</h2>
-        <form method="POST">
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Goat's Plan</title>
+    <link rel="stylesheet" href="{% static 'planner/forms_style.css' %}">
+</head>
+<body>
+    <h2>{% if object %}Edit project {{ object.name }}{% else %}Create project{% endif %} in {{ parent_company.name }}</h2>
+    <div class="form-container">
+        <form method="post">
             {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit">Save</button>
+            <div class="form-group">
+                <label for="id_name">Name:</label>
+                <input type="text" name="name" id="id_name" maxlength="100" required class="form-input">
+            </div>
+            <div class="form-group">
+                {{ form.user_list }}
+            </div>
+            <button type="submit" class="submit-button">Submit</button>
         </form>
-    </body>
+    </div>
+</body>
 </html>
