@@ -106,7 +106,7 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
     def get_template_names(self):
         user = self.request.user
         if user.role == 'developer':
-            return ['planner/index.html']
+            return ['planner/developer/tasks.html']
         elif user.role == 'project_manager':
             return ['planner/project_manager/tasks.html']
 
