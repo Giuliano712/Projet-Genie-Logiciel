@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Goat's Plan</title>
+    <link rel="stylesheet" href="{% static 'planner/tasks_style.css' %}">
+</head>
+<body>
+    <div class="header">
+        <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
+        <h1>Goat's Plan</h1>
+    </div>
+
+    <div class="board">
+        <!-- To Do Column -->
+        <div class="column">
+            <h2>To Do</h2>
+            {% if project_tasks %}
+                {% for project, tasks in project_tasks.items %}
+                    <div class="project-group">
+                        <h3 class="project-title">{{ project.name }}</h3>
+                        {% for task in tasks %}
+                            {% if task.status == "TO_DO" %}
+                                <div class="task">
+    <span><strong>Titre :</strong> {{ task.title }}</span>
+    <span><strong>Importance :</strong> {{ task.importance }}</span>
+    <span><strong>Deadline :</strong> {{ task.deadline }}</span>
+    <span><strong>Participants :</strong>
+        {% for user in task.assigned_users.all %}
+            {{ user.username }}{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            Aucun participant
+        {% endfor %}
+    </span>
+    <select class="status-selector" data-task-id="{{ task.id }}">
+        <option value="TO_DO" {% if task.status == "TO_DO" %}selected{% endif %}>To Do</option>
+        <option value="DOING" {% if task.status == "DOING" %}selected{% endif %}>Doing</option>
+        <option value="DONE" {% if task.status == "DONE" %}selected{% endif %}>Done</option>
+    </select>
+</div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Doing Column -->
+        <div class="column">
+            <h2>Doing</h2>
+            {% if project_tasks %}
+                {% for project, tasks in project_tasks.items %}
+                    <div class="project-group">
+                        <h3 class="project-title">{{ project.name }}</h3>
+                        {% for task in tasks %}
+                            {% if task.status == "DOING" %}
+                                <div class="task">
+    <span><strong>Titre :</strong> {{ task.title }}</span>
+    <span><strong>Importance :</strong> {{ task.importance }}</span>
+    <span><strong>Deadline :</strong> {{ task.deadline }}</span>
+    <span><strong>Participants :</strong>
+        {% for user in task.assigned_users.all %}
+            {{ user.username }}{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            Aucun participant
+        {% endfor %}
+    </span>
+    <select class="status-selector" data-task-id="{{ task.id }}">
+        <option value="TO_DO" {% if task.status == "TO_DO" %}selected{% endif %}>To Do</option>
+        <option value="DOING" {% if task.status == "DOING" %}selected{% endif %}>Doing</option>
+        <option value="DONE" {% if task.status == "DONE" %}selected{% endif %}>Done</option>
+    </select>
+</div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Done Column -->
+        <div class="column">
+            <h2>Done</h2>
+            {% if project_tasks %}
+                {% for project, tasks in project_tasks.items %}
+                    <div class="project-group">
+                        <h3 class="project-title">{{ project.name }}</h3>
+                        {% for task in tasks %}
+                            {% if task.status == "DONE" %}
+                                <div class="task">
+    <span><strong>Titre :</strong> {{ task.title }}</span>
+    <span><strong>Importance :</strong> {{ task.importance }}</span>
+    <span><strong>Deadline :</strong> {{ task.deadline }}</span>
+    <span><strong>Participants :</strong>
+        {% for user in task.assigned_users.all %}
+            {{ user.username }}{% if not forloop.last %}, {% endif %}
+        {% empty %}
+            Aucun participant
+        {% endfor %}
+    </span>
+    <select class="status-selector" data-task-id="{{ task.id }}">
+        <option value="TO_DO" {% if task.status == "TO_DO" %}selected{% endif %}>To Do</option>
+        <option value="DOING" {% if task.status == "DOING" %}selected{% endif %}>Doing</option>
+        <option value="DONE" {% if task.status == "DONE" %}selected{% endif %}>Done</option>
+    </select>
+</div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Détails de la tâche</h2>
+            <p><strong>Titre :</strong> <span id="modalTitre"></span></p>
+            <p><strong>Importance :</strong> <span id="modalImportance"></span></p>
+            <p><strong>Deadline :</strong> <span id="modalDeadline"></span></p>
+            <p><strong>Commentaire :</strong> <span id="modalCommentaire"></span></p>
+            <p><strong>État :</strong> <span id="modalEtat"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Modal script (inchangé)
+        const modal = document.getElementById("taskModal");
+        const closeBtn = document.querySelector(".close");
+
+        function openModal(title, importance, deadline, description, status) {
+            document.getElementById("modalTitre").textContent = title;
+            document.getElementById("modalImportance").textContent = importance;
+            document.getElementById("modalDeadline").textContent = deadline;
+            document.getElementById("modalCommentaire").textContent = description;
+            document.getElementById("modalEtat").textContent = status;
+            modal.style.display = "block";
+        }
+
+        closeBtn.onclick = function() {
+            modal.style.display = "none";
+        };
+
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        };
+
+    function getRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
+
+    function applyProjectColors() {
+        const projectGroups = document.querySelectorAll(".project-group");
+        const projectColors = {}; // Pour stocker les couleurs par projet
+
+        projectGroups.forEach(group => {
+            const projectTitle = group.querySelector(".project-title").textContent.trim();
+
+            // Vérifie si une couleur est déjà assignée au projet
+            if (!projectColors[projectTitle]) {
+                projectColors[projectTitle] = getRandomColor();
+            }
+
+            // Applique la couleur de bordure à ce groupe
+            group.style.borderColor = projectColors[projectTitle];
+        });
+    }
+
+    // Applique les couleurs quand le DOM est chargé
+    document.addEventListener("DOMContentLoaded", applyProjectColors);
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const statusSelectors = document.querySelectorAll(".status-selector");
+
+        statusSelectors.forEach(selector => {
+            selector.addEventListener("change", event => {
+                const taskId = event.target.getAttribute("data-task-id");
+                const newStatus = event.target.value;
+
+                // Envoyer une requête AJAX pour mettre à jour le statut
+                fetch(`/update-task-status/${taskId}/`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRFToken": "{{ csrf_token }}" // Ajoutez un jeton CSRF
+                    },
+                    body: JSON.stringify({ status: newStatus })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Déplacer la tâche dans la bonne colonne
+                        const taskElement = event.target.closest(".task");
+                        const targetColumn = document.querySelector(`.column h2:contains('${newStatus}')`).parentNode;
+                        targetColumn.appendChild(taskElement);
+                    } else {
+                        alert("Erreur lors de la mise à jour du statut.");
+                    }
+                })
+                .catch(error => console.error("Erreur réseau :", error));
+            });
+        });
+    });
+    </script>
+</body>
+</html>
