@@ -9,31 +9,51 @@
 </head>
 <body>
     <div class="header">
-        <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
+        <!-- Make image clickable and link to home page -->
+        <a href="{% url "planner:home" %}">
+            <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
+        </a>
         <h1>Goat's Plan</h1>
     </div>
 
     <div class="board">
         <!-- To Do Column -->
+        {% for status, status_label in STATUS_CHOICES %}
         <div class="column">
-            <h2>To Do</h2>
+            <h2>{{ status_label }}</h2>
             {% if project_tasks %}
                 {% for project, tasks in project_tasks.items %}
                     <div class="project-group">
                         <h3 class="project-title">{{ project.name }}</h3>
                         {% for task in tasks %}
-                            {% if task.status == "TO_DO" %}
-                                <div class="task" onclick="openModal('{{ task.title }}', '{{ task.importance }}', '{{ task.deadline }}', '{{ task.description }}', '{{ task.status }}')">
-                                    <span><strong>Titre :</strong> {{ task.title }}</span>
-                                    <span><strong>Importance :</strong> {{ task.importance }}</span>
-                                    <span><strong>Deadline :</strong> {{ task.deadline }}</span>
-                                    <span><strong>Participants :</strong>
+                            {% if task.status == status %}
+                                <div class="task">
+                                    <span>
+                                        <strong>Titre :</strong> {{ task.title }}
+                                    </span>
+                                    <span>
+                                        <strong>Importance :</strong> {{ task.importance }}
+                                    </span>
+                                    <span>
+                                        <strong>Deadline :</strong> {{ task.deadline }}
+                                    </span>
+                                    <span>
+                                        <strong>Participants :</strong>
                                         {% for user in task.assigned_users.all %}
                                             {{ user.username }}{% if not forloop.last %}, {% endif %}
                                         {% empty %}
                                             Aucun participant
                                         {% endfor %}
                                     </span>
+                                    <form method="post" action="{% url 'planner:all_tasks_and_projects' userid=user.id ccid=client_company.id %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="task_id" value="{{ task.pk }}">
+                                        <select name="status" class="status-selector" data-task-id="{{ task.id }}" onchange="this.form.submit()">
+                                        {% for dropdown_status, dropdown_status_label in STATUS_CHOICES %}
+                                            <option value="{{ dropdown_status }}" {% if task.status == dropdown_status %}selected{% endif %}>{{ dropdown_status_label }}</option>
+                                        {% endfor %}
+                                        </select>
+                                    </form>
                                 </div>
                             {% endif %}
                         {% endfor %}
@@ -41,50 +61,9 @@
                 {% endfor %}
             {% endif %}
         </div>
+        {% endfor %}
 
-        <!-- Doing Column -->
-        <div class="column">
-            <h2>Doing</h2>
-            {% for task in user_tasks %}
-                {% if task.status == "DOING" %}
-                    <div class="task" onclick="openModal('{{ task.title }}', '{{ task.importance }}', '{{ task.deadline }}', '{{ task.description }}', '{{ task.status }}')">
-                        <span><strong>Titre :</strong> {{ task.title }}</span>
-                        <span><strong>Importance :</strong> {{ task.importance }}</span>
-                        <span><strong>Deadline :</strong> {{ task.deadline }}</span>
-                        <span><strong>Participants :</strong>
-                            {% for user in task.assigned_users.all %}
-                                {{ user.username }}{% if not forloop.last %}, {% endif %}
-                            {% empty %}
-                                Aucun participant
-                            {% endfor %}
-                        </span>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
-
-        <!-- Done Column -->
-        <div class="column">
-            <h2>Done</h2>
-            {% for task in user_tasks %}
-                {% if task.status == "DONE" %}
-                    <div class="task" onclick="openModal('{{ task.title }}', '{{ task.importance }}', '{{ task.deadline }}', '{{ task.description }}', '{{ task.status }}')">
-                        <span><strong>Titre :</strong> {{ task.title }}</span>
-                        <span><strong>Importance :</strong> {{ task.importance }}</span>
-                        <span><strong>Deadline :</strong> {{ task.deadline }}</span>
-                        <span><strong>Participants :</strong>
-                            {% for user in task.assigned_users.all %}
-                                {{ user.username }}{% if not forloop.last %}, {% endif %}
-                            {% empty %}
-                                Aucun participant
-                            {% endfor %}
-                        </span>
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </div>
     </div>
-
     <div id="taskModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -96,30 +75,60 @@
             <p><strong>État :</strong> <span id="modalEtat"></span></p>
         </div>
     </div>
-
-    <script>
-        // Modal script (inchangé)
-        const modal = document.getElementById("taskModal");
-        const closeBtn = document.querySelector(".close");
-
-        function openModal(title, importance, deadline, description, status) {
-            document.getElementById("modalTitre").textContent = title;
-            document.getElementById("modalImportance").textContent = importance;
-            document.getElementById("modalDeadline").textContent = deadline;
-            document.getElementById("modalCommentaire").textContent = description;
-            document.getElementById("modalEtat").textContent = status;
-            modal.style.display = "block";
-        }
-
-        closeBtn.onclick = function() {
-            modal.style.display = "none";
-        };
-
-        window.onclick = function(event) {
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        };
-    </script>
 </body>
 </html>
+
+<script>
+// Modal script (inchangé)
+const modal = document.getElementById("taskModal");
+const closeBtn = document.querySelector(".close");
+
+function openModal(title, importance, deadline, description, status) {
+    document.getElementById("modalTitre").textContent = title;
+    document.getElementById("modalImportance").textContent = importance;
+    document.getElementById("modalDeadline").textContent = deadline;
+    document.getElementById("modalCommentaire").textContent = description;
+    document.getElementById("modalEtat").textContent = status;
+    modal.style.display = "block";
+}
+
+closeBtn.onclick = function() {
+    modal.style.display = "none";
+};
+
+window.onclick = function(event) {
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+};
+
+function getRandomColor() {
+    const letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+}
+
+function applyProjectColors() {
+    const projectGroups = document.querySelectorAll(".project-group");
+    const projectColors = {}; // Pour stocker les couleurs par projet
+
+    projectGroups.forEach(group => {
+        const projectTitle = group.querySelector(".project-title").textContent.trim();
+
+        // Vérifie si une couleur est déjà assignée au projet
+        if (!projectColors[projectTitle]) {
+            projectColors[projectTitle] = getRandomColor();
+        }
+
+        // Applique la couleur de bordure à ce groupe
+        group.style.borderColor = projectColors[projectTitle];
+    });
+}
+
+// Applique les couleurs quand le DOM est chargé
+document.addEventListener("DOMContentLoaded", applyProjectColors);
+
+</script>

@@ -12,7 +12,9 @@
 </head>
 <body>
     <header>
-        <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo">
+        <a href="{% url "planner:home" %}">
+            <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo">
+        </a>
         <h1>Goat's Plan</h1>
     </header>
 

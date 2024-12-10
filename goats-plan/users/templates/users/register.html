@@ -6,7 +6,9 @@
 {% block content %}
 <div style="display: flex; align-items: center; margin-bottom: 20px;">
     <!-- Logo -->
-    <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" style="height: 50px; margin-right: 15px;">
+    <a href="{% url "users:login" %}">
+        <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" style="height: 50px; margin-right: 15px;">
+    </a>
 
     <!-- Titre -->
     <h1 style="margin: 0;">Goat's Plan</h1>

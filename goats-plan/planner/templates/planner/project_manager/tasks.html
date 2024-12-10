@@ -5,59 +5,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Goat's Plan</title>
- <link rel="stylesheet" href="{% static 'planner/base_style.css' %}">
+    <link rel="stylesheet" href="{% static 'planner/base_style.css' %}">
+    <link rel="stylesheet" href="{% static 'planner/taskspm.css' %}">
+
 </head>
 <body>
-    <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
+    <a href="{% url "planner:home" %}">
+        <img src="{% static 'planner/LogoGoat.png' %}" alt="Logo" class="logo" width="50px">
+    </a>
     <h1>Goat's Plan</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Titre</th>
-                <th>Status</th>
-                <th>Importance</th>
-                <th>Detail</th>
-                <th>Deadline</th>
-                <th>For who ?</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for task in user_tasks %}
-            <tr>
-                <td>{{ task.title }}</td>
-                <td>{{ task.status }}</td>
-                <td>{{ task.importance }}</td>
-                <td>{{ task.description }}</td>
-                <td>{{ task.deadline }}</td>
-                <td>
-                    {% if task.assigned_users.all %}
+
+    <div class="task-container">
+        <!-- To Do Column -->
+        <div class="column" id="to-do">
+            <h3>To Do</h3>
+            {% for task in user_tasks %}
+                {% if task.status == "TO_DO" %}
+                <div class="task-card">
+                    <p><strong>Title:</strong> {{ task.title }}</p>
+                    <p><strong>Importance:</strong> {{ task.importance }}</p>
+                    <p><strong>Deadline:</strong> {{ task.deadline }}</p>
+                    <p><strong>Participants:</strong>
                         {% for user in task.assigned_users.all %}
                             {{ user.username }}{% if not forloop.last %}, {% endif %}
                         {% endfor %}
-                    {% else %}
-                        No users assigned
-                    {% endif %}
-                </td>
-                <td>
-                    <form method="post" action="{% url 'planner:update_task' userid=user.id ccid=parent_company.id projectid=project.pk pk=task.pk %}">
+                    </p>
+                    <form method="post" action="{% url 'planner:update_task' userid=user.id ccid=parent_company.id projectid=project.pk pk=task.pk %}" style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit" id="updated-task-btn">Update Task</button>
+                        <button type="submit">Update</button>
                     </form>
-                </td>
-                <td>
                     <form method="post" action="{% url 'planner:delete_task' userid=user.id ccid=parent_company.id projectid=project.pk pk=task.pk %}" style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit" onclick="return confirm('Are you sure you want to delete this task?');">Delete Task</button>
+                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this task?');">Delete</button>
                     </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <!-- Doing Column -->
+        <div class="column" id="doing">
+            <h3>Doing</h3>
+            {% for task in user_tasks %}
+                {% if task.status == "DOING" %}
+                <div class="task-card">
+                    <p><strong>Title:</strong> {{ task.title }}</p>
+                    <p><strong>Importance:</strong> {{ task.importance }}</p>
+                    <p><strong>Deadline:</strong> {{ task.deadline }}</p>
+                    <p><strong>Participants:</strong>
+                        {% for user in task.assigned_users.all %}
+                            {{ user.username }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <form method="post" action="{% url 'planner:update_task' userid=user.id ccid=parent_company.id projectid=project.pk pk=task.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Update</button>
+                    </form>
+                    <form method="post" action="{% url 'planner:delete_task' userid=user.id ccid=parent_company.id projectid=project.pk pk=task.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this task?');">Delete</button>
+                    </form>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <!-- Done Column -->
+        <div class="column" id="done">
+            <h3>Done</h3>
+            {% for task in user_tasks %}
+                {% if task.status == "DONE" %}
+                <div class="task-card">
+                    <p><strong>Title:</strong> {{ task.title }}</p>
+                    <p><strong>Importance:</strong> {{ task.importance }}</p>
+                    <p><strong>Deadline:</strong> {{ task.deadline }}</p>
+                    <p><strong>Participants:</strong>
+                        {% for user in task.assigned_users.all %}
+                            {{ user.username }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </p>
+                    <form method="post" action="{% url 'planner:update_task' userid=user.id ccid=parent_company.id projectid=project.pk pk=task.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit">Update</button>
+                    </form>
+                    <form method="post" action="{% url 'planner:delete_task' userid=user.id ccid=parent_company.id projectid=project.pk pk=task.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn" onclick="return confirm('Are you sure you want to delete this task?');">Delete</button>
+                    </form>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
     <form method="post" action="{% url 'planner:add_task' userid=user.id ccid=parent_company.id projectid=project.pk %}">
         {% csrf_token %}
-        <button type="submit" id="add-task-btn">Add Task</button>
+        <button type="submit" id="add-task-btn" style="margin: 20px auto; display: block;">Add Task</button>
     </form>
 </body>
 </html>
-

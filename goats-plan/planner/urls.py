@@ -18,7 +18,6 @@ urlpatterns = [
     path('<int:userid>/mycompanies/<uuid:ccid>/<uuid:projectid>/add-task/', views.TaskCreateView.as_view(), name='add_task'),
     path('<int:userid>/mycompanies/<uuid:ccid>/<uuid:projectid>/<int:pk>/update-task/', views.TaskUpdateView.as_view(), name='update_task'),
     path('<int:userid>/mycompanies/<uuid:ccid>/<uuid:projectid>/<int:pk>/delete-task/', views.TaskDeleteView.as_view(), name='delete_task'),
-
 ]
 
 # <uuid:id> uses the id of the clientcompany
