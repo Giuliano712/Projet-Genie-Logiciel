@@ -394,11 +394,13 @@ class AllTasksView(LoginRequiredMixin, DetailView):
         context['project_tasks'] = project_tasks
 
         context['client_company'] = client_company
+        context['STATUS_CHOICES'] = Task.STATUS_CHOICES
+
 
         return context
 
 
-    def post(self, request, userid, ccid, projectid, *args, **kwargs):
+    def post(self, request, userid, ccid, *args, **kwargs):
         task_id = request.POST.get('task_id')
         task = Task.objects.get(id=task_id)
 
@@ -410,6 +412,6 @@ class AllTasksView(LoginRequiredMixin, DetailView):
                 # Handle form errors here
                 pass
 
-        return redirect('planner:all_tasks_and_projects', userid=userid, ccid=ccid, projectid=projectid)
+        return redirect('planner:all_tasks_and_projects', userid=userid, ccid=ccid)
 
 
